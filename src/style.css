@@ -61,7 +61,7 @@ body {
 }
 
 .eyes {
-  width: 70%;
+  width: min(700px, 80vw);
   display: flex;
   flex-direction: row;
   justify-content: center;
