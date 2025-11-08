@@ -23,19 +23,135 @@ position: relative;
     top: 10%;
     width: 70%;
 }
-#chooseContainer{
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-gap: min(4vw, 20px);
+#chooseContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: min(4vw, 32px);
   padding: 0 5vw;
-    margin-top: 55px;
+  margin-top: 55px;
+  box-sizing: border-box;
+  width: 100%;
 }
 
-#chooseContainer img {
+.choice-link {
+  display: block;
   flex: 0 0 auto;
-  width: min(27vw, 230px); 
+  text-decoration: none;
+}
+
+.eye-wrap {
+  position: relative;
+  width: min(30vw, 230px); 
+}
+
+.eye-mask {
+  position: relative;
+  width: 100%;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+}
+
+/* 초록 눈용 마스크 */
+.eye-mask--green {
+  -webkit-mask-image: url("../image/choose_page/choose_crazy.svg");
+  mask-image: url("../image/choose_page/choose_crazy.svg");
+}
+
+/* 핑크 눈용 마스크 */
+.eye-mask--pink {
+  -webkit-mask-image: url("../image/choose_page/choose_love.svg");
+  mask-image: url("../image/choose_page/choose_love.svg");
+}
+
+/* 파랑 눈용 마스크 */
+.eye-mask--blue {
+  -webkit-mask-image: url("../image/choose_page/choose_sad.svg");
+  mask-image: url("../image/choose_page/choose_sad.svg");
+}
+
+/* 기본 눈 그림 */
+.eye-base {
+  width: 100%;
   height: auto;
   display: block;
+  position: relative;
+  z-index: 1;
+}
+
+/* 눈꺼풀 공통 */
+.eyelid {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: auto;
+  pointer-events: none;
+  z-index: 2; /* 눈 위에 */
+}
+
+/* 위 눈꺼풀: 위에서 내려왔다 올라감 */
+.eyelid-up {
+  top: 0;
+  transform: translateY(-100%);
+  animation: eyelidUpBlink 4s ease-in-out infinite;
+}
+
+/* 아래 눈꺼풀 애니메이션 */
+.eyelid-down {
+  bottom: 0;
+  transform: translateY(100%);
+  animation: eyelidDownBlink 4s ease-in-out infinite;
+}
+
+/* 위 눈꺼풀 애니메이션 */
+@keyframes eyelidUpBlink {
+  0% {
+    transform: translateY(-100%);
+  }
+  10% {
+    transform: translateY(0);
+  }
+  20% {
+    transform: translateY(-100%); 
+  }
+  100% {
+    transform: translateY(-100%)
+  }
+}
+
+/* 아래 눈꺼풀 애니메이션 */
+@keyframes eyelidDownBlink {
+  0% {
+    transform: translateY(100%);
+  }
+  10% {
+    transform: translateY(0);
+  }
+  20% {
+    transform: translateY(100%);
+  }
+  100% {
+    transform: translateY(100%);
+  }
+}
+
+
+.eye-mask--green .eyelid-up,
+.eye-mask--green .eyelid-down {
+  animation-delay: 1s;
+}
+
+.eye-mask--pink .eyelid-up,
+.eye-mask--pink .eyelid-down {
+  animation-delay: 0.3s;
+}
+
+
+.eye-mask--blue .eyelid-up,
+.eye-mask--blue .eyelid-down {
+  animation-delay: 2s;
 }
