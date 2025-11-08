@@ -50,8 +50,8 @@ body {
 .eye-mask {
   position: relative;
   width: 100%;
-  -webkit-mask-image: url("../image/love/white_shape.svg");
-  mask-image: url("../image/love/white_shape.svg");
+  -webkit-mask-image: url("../image/group_10.svg");
+  mask-image: url("../image/group_10.svg");
   -webkit-mask-size: contain;
   mask-size: contain;
   -webkit-mask-repeat: no-repeat;
