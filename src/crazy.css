@@ -1,0 +1,91 @@
+body {
+  background-color: #191919;
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow-x: hidden;
+}
+
+#gameContainer {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;  
+    justify-content: flex-start;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+}
+
+#title{
+    position: relative; 
+        width: 100%;
+}
+
+.eyes {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 71px;
+  margin-top: 50px;  
+}
+
+.eye-wrap {
+position: relative;
+  width: min(37vw, 350px);
+}
+
+.eye-mask {
+  position: relative;
+  width: 100%;
+  z-index: 2;  
+  -webkit-mask-image: url("../image/love/white_shape.svg");
+  mask-image: url("../image/love/white_shape.svg");
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+}
+
+
+
+/* 흰자 */
+.eye-white {
+width: 100%;
+  height: auto;
+  display: block;
+  position: relative;
+  z-index: 1;
+}
+
+.eye-pupil {
+ width: 50%;
+  height: auto;
+  position: absolute;
+  top: 14%;
+  left: 25%;
+  z-index: 2;
+}
+
+.eye-cover {
+    width: 102%;
+    height: auto;
+  position: absolute;
+  left: -3px;
+  z-index: 3;
+}
+
+/* 위 눈꺼풀 */
+.eye-cover-up {
+  top: 0;
+}
+
+/* 아래 눈꺼풀 */
+.eye-cover-down {
+  top: auto;
+  bottom: 0;  
+}

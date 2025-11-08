@@ -4,9 +4,36 @@ const eyesArea = document.querySelector('.eyes');
 const upcovers = document.querySelectorAll('.eye-cover-up');
 const downcovers = document.querySelectorAll('.eye-cover-down');
 const pupils = document.querySelectorAll('.eye-pupil');
-const cheeks = document.querySelectorAll('.eye-cheek');
+const whites = document.querySelectorAll('.eye-white');
 
-const openUp = '-100%';
+/* ===========================
+   테마별로 만질만한 값 모음
+   =========================== */
+
+// 눈 기본 위치 (동공 기준 위치)
+const baseLeftPercent = 25;
+const baseTopPercent = 14;
+
+// 동공 이미지들 (테마 바꿀 때 여기 경로만 수정하면 됨)
+const defaultPupilSrc = './image/crazy/pupil_green.svg';
+const failPupilSrc    = './image/crazy/fail_right_pupil.svg';
+const successPupilSrc = './image/crazy/success_pupil.svg';
+
+// 실패 시 왼쪽 동공 축소 비율 (1보다 작게)
+const failLeftPupilScale = 0.6;
+// 흰자 이미지들 (👁 실패 시 바뀔 부분)
+const defaultWhiteSrc = './image/crazy/white_shape.svg';
+const failWhiteSrc    = './image/crazy/fail_shape.svg';
+
+const successDanceOffsetX = 10;  
+const successDanceOffsetY = 6;   
+const successDanceMinDelay = 80;  
+const successDanceMaxDelay = 200;
+// 성공 시 동공 크기
+const successPupilScale = 0.7;   // scale 값 (0.7배)
+
+// 눈꺼풀 위치 값
+const openUp   = '-100%';
 const openDown = '-100%';
 const closePos = '0%';
 
@@ -14,17 +41,14 @@ const squint1 = '-5%';
 const squint2 = '-20%';
 const squint3 = '-30%';
 
-const baseLeftPercent = 25;
-const baseTopPercent = 14;
+// 동공 랜덤 움직임 범위 (퍼센트)
+const maxOffsetXPercent = 12; 
+const maxOffsetYPercent = 7;  
 
-// 동공 이미지들
-const defaultPupilSrc = './image/love/pupil_pink.svg';
-const successPupilSrc = './image/love/falling_pupil_pink.svg';
 
-// 랜덤으로 움직일 수 있는 범위(퍼센트)
-const maxOffsetXPercent = 12; // 좌우 ±12%
-const maxOffsetYPercent = 7;  // 상하 ±7%
-
+// =============================
+// 동공 랜덤 이동
+// =============================
 function lookSide() {
   const randX = (Math.random() * 2 - 1) * maxOffsetXPercent;
   const randY = (Math.random() * 2 - 1) * maxOffsetYPercent;
@@ -42,7 +66,11 @@ let waitingForRestart = false;
 let behaviorTimer = null;
 let gameStartTimer = null;
 let tryAgainTimer = null;
+let successDanceTimer = null;
 
+// =============================
+// 눈꺼풀 제어
+// =============================
 function setUpcoverTop(value) {
   upcovers.forEach(el => {
     el.style.top = value;
@@ -101,6 +129,9 @@ function squinttt() {
   setTimeout(openEyes, 400);
 }
 
+// =============================
+// 랜덤 행동
+// =============================
 const behaviors = [
   () => blink(),
   () => slowBlink(),
@@ -132,9 +163,12 @@ function stopBehaviors() {
   }
 }
 
+// =============================
 // 게임 초기화
+// =============================
 function initGame() {
   stopBehaviors();
+  stopSuccessDance();
   if (gameStartTimer) {
     clearTimeout(gameStartTimer);
     gameStartTimer = null;
@@ -150,81 +184,138 @@ function initGame() {
   waitingForRestart = false;
 
   if (title) {
-    title.src = './image/love/love_title.svg';
+    title.src = './image/crazy/title_green.svg';
   }
+whites.forEach(white => {
+  white.src = defaultWhiteSrc;
+});
 
-  // 치크 숨기기
-  cheeks.forEach(ch => {
-    ch.style.display = 'none';
-  });
-
+  // 아랫눈꺼풀 다시 보이게 (혹시 숨겼던 게 있다면)
   downcovers.forEach(el => {
     el.style.display = 'block';
   });
+
+  // ✅ 처음 시작 & 리셋할 때는 무조건 눈 뜨고 시작
   openEyes();
 
-  // 동공 이미지/위치 원래대로
+  // 동공 이미지/위치/스케일 원래대로
   pupils.forEach(pupil => {
     pupil.src = defaultPupilSrc;
     pupil.style.left = `${baseLeftPercent}%`;
     pupil.style.top  = `${baseTopPercent}%`;
+    pupil.style.transform = 'scale(1)';  
+    pupil.style.transformOrigin = '50% 50%';
   });
 
+  // 2초 뒤 게임 행동 시작
   gameStartTimer = setTimeout(() => {
     gameStarted = true;
     scheduleNextBehavior();
   }, 2000);
 }
 
+// =============================
 // 성공시
+// =============================
 function handleWin() {
   if (!gameStarted) return;
 
   gameStarted = false;
   stopBehaviors();
+  stopSuccessDance(); 
 
-  // 동공 이미지 성공 버전으로 변경
   pupils.forEach(pupil => {
     pupil.src = successPupilSrc;
-  });
-
-  pupils.forEach(pupil => {
     pupil.style.left = `${baseLeftPercent}%`;
-    pupil.style.top = `${baseTopPercent}%`;
+    pupil.style.top  = `${baseTopPercent}%`;
+    pupil.style.transform = `scale(${successPupilScale})`;
+    pupil.style.transformOrigin = '50% 50%';
   });
 
   if (title) {
-    title.src = './image/love/success_title.svg';
+    title.src = './image/crazy/success_title.svg';
   }
 
   waitingForRestart = true;
+
+  startSuccessDance();
 }
 
+// =============================
+// 성공 상태에서 눈동자 랜덤으로 돌아다니기
+// =============================
+function startSuccessDance() {
+  // 혹시 이전 타이머가 남아 있으면 정리
+  if (successDanceTimer) {
+    clearTimeout(successDanceTimer);
+    successDanceTimer = null;
+  }
+
+  function step() {
+    // 더 이상 성공 상태가 아니면 중지
+    if (!waitingForRestart) {
+      successDanceTimer = null;
+      return;
+    }
+
+    pupils.forEach((pupil, i) => {
+      // 각 눈의 기준 위치는 baseLeftPercent / baseTopPercent
+      const randX = (Math.random() * 2 - 1) * successDanceOffsetX;
+      const randY = (Math.random() * 2 - 1) * successDanceOffsetY;
+
+      pupil.style.left = `${baseLeftPercent + randX}%`;
+      pupil.style.top  = `${baseTopPercent  + randY}%`;
+    });
+
+    const delay =
+      successDanceMinDelay +
+      Math.random() * (successDanceMaxDelay - successDanceMinDelay);
+
+    successDanceTimer = setTimeout(step, delay);
+  }
+
+  step();
+}
+
+function stopSuccessDance() {
+  if (successDanceTimer) {
+    clearTimeout(successDanceTimer);
+    successDanceTimer = null;
+  }
+}
+
+// =============================
 // 실패시
+// =============================
 function handleFail() {
   if (!gameStarted) return;
 
   gameStarted = false;
   stopBehaviors();
+  stopSuccessDance();
+  // 동공 실패 이미지 + 위치
+  pupils.forEach(pupil => {
+    pupil.src = failPupilSrc;
+    pupil.style.left = `${baseLeftPercent}%`;
+    pupil.style.top  = `${baseTopPercent}%`;
+    pupil.style.transform = 'scale(1)';
+  });
 
-  if (title) {
-    title.src = './image/love/fail_title.svg';
+  // 👇 실패하면 흰자도 fail_shape 로 변경
+  whites.forEach(white => {
+    white.src = failWhiteSrc;
+  });
+
+  // 왼쪽 동공만 작게
+  const leftPupil = pupils[0];
+  if (leftPupil) {
+    leftPupil.style.transform = `scale(${failLeftPupilScale})`;
+    leftPupil.style.transformOrigin = '50% 50%';
   }
 
-  // 윗꺼풀 닫고 아랫꺼풀은 열린 상태 유지
-  setUpcoverTop(closePos);
-  setDowncoverBottom(openDown);
-
-  // 동공 중앙 정렬
-  pupils.forEach(pupil => {
-    pupil.style.left = `${baseLeftPercent}%`;
-    pupil.style.top = `${baseTopPercent}%`;
-  });
-
-  // 치크 보이기
-  cheeks.forEach(ch => {
-    ch.style.display = 'block';
-  });
+  if (title) {
+    title.src = './image/crazy/fail_title.svg';
+  }
 
   waitingForRestart = true;
 
@@ -235,11 +326,15 @@ function handleFail() {
   tryAgainTimer = setTimeout(() => {
     if (!waitingForRestart) return;
     if (title) {
-      title.src = './image/love/tryagain_title.svg';
+      title.src = './image/crazy/tryagain_title.svg';
     }
   }, 2000);
 }
 
+
+// =============================
+// 입력 핸들러
+// =============================
 function handleEyeTap(e) {
   if (e) e.preventDefault();
 
@@ -270,6 +365,9 @@ function handleTitleTap(e) {
   initGame();
 }
 
+// =============================
+// 이벤트 연결 + 시작
+// =============================
 if (eyesArea) {
   eyesArea.addEventListener('click', handleEyeTap);
   eyesArea.addEventListener('touchend', handleEyeTap);
