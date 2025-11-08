@@ -87,7 +87,7 @@ body {
 .eyelid {
   position: absolute;
   left: 0;
-  width: 100%;
+  width: 101%;
   height: auto;
   pointer-events: none;
   z-index: 2;
