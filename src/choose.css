@@ -1,0 +1,41 @@
+body {
+  background-color: #191919;
+    width: 100vw;
+  height: 100vh;
+  color: white;
+  overflow-x: hidden;
+}
+
+#gameContainer {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;  
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+position: relative;
+}
+
+
+#choose_ment{
+    position: absolute;
+    top: 10%;
+    width: 70%;
+}
+#chooseContainer{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+gap: min(4vw, 20px);
+  padding: 0 5vw;
+    margin-top: 55px;
+}
+
+#chooseContainer img {
+  flex: 0 0 auto;
+  width: min(27vw, 230px); 
+  height: auto;
+  display: block;
+}

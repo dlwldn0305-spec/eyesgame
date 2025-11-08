@@ -1,3 +1,5 @@
+
+
 //눈 깜빡일때
 const leftcover1  = document.getElementById('leftcover1');
 const leftcover2 = document.getElementById('leftcover2');

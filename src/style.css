@@ -1,68 +1,101 @@
 body {
-    background-color: rgb(34, 34, 34);
-    font-family: sans-serif;
+  background-color: #191919;
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow-x: hidden;
 }
 
-.eyes{
-    display:flex;
-    gap:10px;
-    margin-top: 90px;
+#gameContainer {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;  
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+}
+
+#titleContainer {
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  transform: translate(-50%, -150px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  opacity: 0;
+
+  animation: titleBlockDrop 0.8s ease-out 2s forwards;
+}
+
+#title {
+  width: 100%;
+  cursor: pointer;
+  animation: titleWiggle 1.5s ease-in-out 3s infinite;
+}
+
+#play_ment{
+  width: 60%;
+}
+
+.eyes {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 71px;
+  animation: eyesDown 0.8s ease-in-out 1.5s forwards;
 }
 .eye {
-    position: relative;
-    width: 180px;
-    height: 100px;
-    border-radius: 100px;
-    background-color: white;
-    overflow:hidden
-}
-.cover1{
-    position: absolute;
-    width: 180px;
-    height: 50px;
-    background-color: darkred;
-    z-index: 1;
-}
-.cover2{
-    position: absolute;
-    top: 50px;
-    width: 180px;
-    height: 50px;
-    background-color: cyan;
-    z-index: 1;
-}
-.pupil{
-    width: 70px;
-    height: 90px;
-    border-radius: 100px;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    background-color: #080808;
-    top:0; bottom:0; left:0; right:0;
-    margin:auto;
+  width: 100%;
+  height: auto;
 }
 
-#lip{
-    font-size: 60px;
-    color: white;
-    top: 130px;
-    left: 45%;
-    margin-top: 70px;
-    position: absolute;
+/* --- 애니메이션 정의 --- */
+@keyframes titleBlockDrop {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -150px);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
 }
-#button{
-    width: 100px;
-    height: 100px;
-    top: 300px;
-    left: 36%;
-    border-radius: 50%;
-    position: absolute;
-    background-color: darkred;
-    color: white;
-    margin-top: 70px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
+
+/* 눈 내려가기 */
+@keyframes eyesDown {
+  0% {
+    transform: translateY(0);  
+  }
+  100% {
+    transform: translateY(170px);   
+  }
+}
+
+/* Blink! 흔들림 (중간 멈춤 포함) */
+@keyframes titleWiggle {
+  0%, 70%, 100% {
+    transform: translate(0, 0) rotate(0deg) scale(1);
+  }
+  10% {
+    transform: translate(0, -4px) rotate(-2deg) scale(1.02);
+  }
+  20% {
+    transform: translate(0, 4px) rotate(2deg) scale(1.02);
+  }
+  30% {
+    transform: translate(0, -3px) rotate(-1deg) scale(1.01);
+  }
+  40% {
+    transform: translate(0, 3px) rotate(1.01deg) scale(1.01);
+  }
+  50%, 60% {
+    transform: translate(0, 0) rotate(0deg) scale(1);
+  }
 }
